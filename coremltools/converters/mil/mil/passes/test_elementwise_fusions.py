@@ -192,7 +192,7 @@ class TestElementwiseOptimizationPasses:
         Cin = 3
         D = 10
         conv_weight = None
-        conv_bias = np.arange(Cout).astype(np.float32) if has_bias else np.zeros(Cout).astype(np.float32)
+        conv_bias = np.arange(Cout).astype(np.float16) if has_bias else np.zeros(Cout).astype(np.float16)
         rank = conv_dim + 2
 
         if conv_dim == 1:
@@ -219,7 +219,7 @@ class TestElementwiseOptimizationPasses:
         cout_index = np.where(perm == 1)[0][0]
 
         # generate the const bias, and reshape it to a random broadcasable shape
-        bias = np.arange(Cout).astype(np.float32)
+        bias = np.arange(Cout).astype(np.float16)
         bias_shape = [1] * rank
         bias_shape[cout_index] = Cout
         if cout_index != 0:

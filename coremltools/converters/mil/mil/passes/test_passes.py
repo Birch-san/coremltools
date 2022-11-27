@@ -31,7 +31,7 @@ validate_model = True
 def test_const_elimination():
     @mb.program(input_specs=[mb.TensorSpec(shape=(2, 4))])
     def prog(x):
-        a = np.random.rand(2, 4).astype(np.float32)
+        a = np.random.rand(2, 4).astype(np.float16)
         double_a = mb.add(x=a, y=a)
         return mb.add(x=x, y=double_a)
 
@@ -48,10 +48,10 @@ def test_const_elimination():
 def test_divide_to_multiply():
     @mb.program(input_specs=[mb.TensorSpec(shape=(2, 4))])
     def prog(x):
-        div_val = np.random.rand(2, 4).astype(np.float32)
+        div_val = np.random.rand(2, 4).astype(np.float16)
         div_const = mb.const(val=div_val)
 
-        div_val_1 = np.random.rand(2, 4).astype(np.float32)
+        div_val_1 = np.random.rand(2, 4).astype(np.float16)
         div_const_1 = mb.const(val=div_val_1)
 
         real_div = mb.real_div(x=x, y=div_const)
@@ -73,9 +73,9 @@ def test_divide_to_multiply():
 def test_fuse_matmul_weight_bias():
     @mb.program(input_specs=[mb.TensorSpec(shape=(2, 4))])
     def prog(x):
-        weights_val = np.random.rand(2, 4).T.astype(np.float32)
+        weights_val = np.random.rand(2, 4).T.astype(np.float16)
         weights = mb.const(val=weights_val)
-        bias_val = np.random.rand(2).astype(np.float32)
+        bias_val = np.random.rand(2).astype(np.float16)
         bias = mb.const(val=bias_val)
 
         matmul = mb.matmul(x=x, y=weights)
@@ -115,9 +115,9 @@ def test_dead_code_elimination():
 
     @mb.program(input_specs=[mb.TensorSpec(shape=(2, 4))])
     def program1(x):
-        weights_val = np.random.rand(4, 2).T.astype(np.float32)
+        weights_val = np.random.rand(4, 2).T.astype(np.float16)
         weights = mb.const(val=weights_val)
-        bias_val = np.random.rand(2).astype(np.float32)
+        bias_val = np.random.rand(2).astype(np.float16)
         bias = mb.const(val=bias_val)
 
         # unused op and its inputs should be eliminated
@@ -403,7 +403,7 @@ def test_add_conv_transpose_output_shape():
 
     @mb.program(input_specs=[mb.TensorSpec(shape=(N, C_in, D1))])
     def prog(x):
-        weight = np.random.rand(C_in, C_out, D1).astype(np.float32)
+        weight = np.random.rand(C_in, C_out, D1).astype(np.float16)
         return mb.conv_transpose(x=x, weight=weight)
 
     prev_prog, prev_block, block = apply_pass_and_basic_check(
@@ -423,14 +423,14 @@ def test_prelu_to_lrelu():
     @mb.program(input_specs=[mb.TensorSpec(shape=(4, 2, 3, 1))])
     def prog(x):
         # Not a common leakage factor.
-        alpha_0 = np.array([1.0, 2.0], dtype=np.float32)
+        alpha_0 = np.array([1.0, 2.0], dtype=np.float16)
         x = mb.prelu(x=x, alpha=alpha_0)
 
-        add_val = np.random.rand(4, 2, 3, 1).astype(np.float32)
+        add_val = np.random.rand(4, 2, 3, 1).astype(np.float16)
         x = mb.add(x=x, y=add_val)
 
         # Common leakage factor.
-        alpha_1 = np.array([1.5, 1.5], dtype=np.float32)
+        alpha_1 = np.array([1.5, 1.5], dtype=np.float16)
         x = mb.prelu(x=x, alpha=alpha_1)
 
         return x
@@ -1341,8 +1341,8 @@ class TestRemoveRedundantOpsPass:
         @mb.program(input_specs=[mb.TensorSpec(shape=(1, 3, 2))])
         def prog(x):
             x1 = mb.layer_norm(x=x, axes=[2], epsilon=1e-4)
-            gamma_val = np.array([1.0, 1.0], dtype=np.float32)
-            beta_val = np.array([1.0, 0.0], dtype=np.float32)
+            gamma_val = np.array([1.0, 1.0], dtype=np.float16)
+            beta_val = np.array([1.0, 0.0], dtype=np.float16)
             x2 = mb.layer_norm(x=x, axes=[2], epsilon=1e-4, gamma=gamma_val, beta=beta_val)
             z = mb.add(x=x1, y=x2)
             return z

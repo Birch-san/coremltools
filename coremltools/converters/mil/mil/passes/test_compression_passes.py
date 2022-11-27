@@ -19,7 +19,7 @@ np.random.seed(1984)
 def _get_conv_program():
     @mb.program(input_specs=[mb.TensorSpec(shape=(1, 30, 10, 10))], opset_version=ct.target.iOS16)
     def prog(x):
-        conv_weight = np.random.rand(90, 30, 2, 2).astype(np.float32)
+        conv_weight = np.random.rand(90, 30, 2, 2).astype(np.float16)
         x =  mb.conv(x=x, weight=conv_weight)
         return x
     return prog

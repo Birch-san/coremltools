@@ -80,9 +80,9 @@ class TestLinearBiasOptimizationPasses:
         """
         Test the weight / bias transform function in the linear bias fusion pass
         """
-        weight = np.reshape(np.arange(8), (2, 4)).astype(np.float32)
-        linear_bias = np.array([1, 2]).astype(np.float32) if has_bias else np.array([0, 0]).astype(np.float32)
-        bias = np.array([3, 4]).astype(np.float32)
+        weight = np.reshape(np.arange(8), (2, 4)).astype(np.float16)
+        linear_bias = np.array([1, 2]).astype(np.float16) if has_bias else np.array([0, 0]).astype(np.float16)
+        bias = np.array([3, 4]).astype(np.float16)
         if broadcast:
             bias = np.reshape(bias, (1, 2))
 
@@ -145,7 +145,7 @@ class TestLinearBiasOptimizationPasses:
 
         @mb.program(input_specs=[mb.TensorSpec(shape=input_shape)])
         def prog(x):
-            linear_weight = np.reshape(np.arange(6), (2, 3)).astype(np.float32)
+            linear_weight = np.reshape(np.arange(6), (2, 3)).astype(np.float16)
             linear_bias = np.array([1., 2.])
             bias = np.array([3., 4.])
             if broadcast:

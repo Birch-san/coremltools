@@ -50,7 +50,7 @@ def _apply_weight_transform(inputs, is_deconv, is_real_div, is_conv_first_input,
             if type(scale) == int:
                 np_value = np.int32(scale)
             elif type(scale) == float:
-                np_value = np.float32(scale)
+                np_value = np.float16(scale)
             scale = mb.const(val=np_value)
         elif const_type == "numpy_0d_array":
             scale = mb.const(val=np.array(scale))
@@ -111,14 +111,14 @@ class TestConvScaleOptimizationPasses:
         """
         # parameters for conv
         is_deconv = conv_type == "conv_type"
-        conv_weight = np.arange(20).astype(np.float32)
+        conv_weight = np.arange(20).astype(np.float16)
         conv_weight = np.reshape(conv_weight, (10, 2, 1, 1)) if is_deconv else np.reshape(conv_weight, (20, 1, 1, 1))
-        conv_bias = np.arange(20).astype(np.float32)
+        conv_bias = np.arange(20).astype(np.float16)
 
         if const_type == "numpy_3d_array":
-            scale = np.reshape(np.arange(20).astype(np.float32), (20, 1, 1))
+            scale = np.reshape(np.arange(20).astype(np.float16), (20, 1, 1))
         elif const_type == "numpy_4d_array":
-            scale = np.reshape(np.arange(20).astype(np.float32), (1, 20, 1, 1))
+            scale = np.reshape(np.arange(20).astype(np.float16), (1, 20, 1, 1))
         else:
             scale = 12.7
 
@@ -145,7 +145,7 @@ class TestConvScaleOptimizationPasses:
                 scale = np.reshape(scale, (20, 1, 1))
                 expect_weight = np.reshape(np.arange(20), (20, 1, 1))
                 expected_weight = expected_weight * scale
-                expected_weight = np.reshape(expected_weight, (10, 2, 1, 1)).astype(np.float32)
+                expected_weight = np.reshape(expected_weight, (10, 2, 1, 1)).astype(np.float16)
             else:
                 scale = np.reshape(scale, (20, 1, 1, 1))
                 expected_weight = conv_weight * scale
@@ -185,7 +185,7 @@ class TestConvScaleOptimizationPasses:
             if scale_type == "scalar":
                 scale = np.array([2.3])
             else:
-                scale = np.arange(Cout).astype(np.float32)
+                scale = np.arange(Cout).astype(np.float16)
                 scale = np.reshape(scale, (1, Cout, 1) if rank == 3 else (Cout, 1, 1))
 
             # scale layer
@@ -242,7 +242,7 @@ class TestConvScaleOptimizationPasses:
             if scale_type == "scalar":
                 scale = np.array([2.3])
             else:
-                scale = np.arange(Cout).astype(np.float32)
+                scale = np.arange(Cout).astype(np.float16)
                 scale = np.reshape(scale, (Cout, 1) if rank == 3 else (1, Cout, 1, 1))
 
             # scale layer

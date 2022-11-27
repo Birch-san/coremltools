@@ -19,7 +19,7 @@ np.random.seed(1984)
 backends = testing_reqs.backends
 
 
-def _apply_weight_transform(inputs, is_deconv, dtype=np.float32):
+def _apply_weight_transform(inputs, is_deconv, dtype=np.float16):
     """
     Utility funtion to test the weight transform function in conv batch_norm fusion pass.
     """
@@ -81,15 +81,15 @@ class TestConvBatchNormOptimizationPasses:
         """
         # parameters for conv
         is_deconv = conv_type == "conv_transpose"
-        conv_weight = np.arange(20).astype(np.float32)
+        conv_weight = np.arange(20).astype(np.float16)
         conv_weight = np.reshape(conv_weight, (10, 2, 1, 1)) if is_deconv else np.reshape(conv_weight, (20, 1, 1, 1))
-        conv_bias = np.arange(20).astype(np.float32)
+        conv_bias = np.arange(20).astype(np.float16)
 
         # parameters for batch_norm
-        gamma = np.ones(20).astype(np.float32)
-        beta = np.zeros(20).astype(np.float32)
-        mean = np.zeros(20).astype(np.float32)
-        variance = np.ones(20).astype(np.float32)
+        gamma = np.ones(20).astype(np.float16)
+        beta = np.zeros(20).astype(np.float16)
+        mean = np.zeros(20).astype(np.float16)
+        variance = np.ones(20).astype(np.float16)
         epsilon = 0.
 
         inputs = {
@@ -111,7 +111,7 @@ class TestConvBatchNormOptimizationPasses:
         "conv_type, dtype",
         itertools.product(
             ["conv", "conv_transpose"],
-            [np.float16, np.float32],
+            [np.float16, np.float16],
         ),
     )
     def test_weight_transform_conv_type(self, conv_type, dtype):
