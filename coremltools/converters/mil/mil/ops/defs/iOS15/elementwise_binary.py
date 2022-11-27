@@ -25,7 +25,7 @@ class elementwise_binary(Operation):
     )
 
     type_domains = {
-        "T": (types.fp16, types.fp32, types.int32),
+        "T": (types.fp16, types.fp16, types.int32),
     }
 
     def type_inference(self):
