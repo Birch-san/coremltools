@@ -160,7 +160,7 @@ class Const(Operation):
     def _get_type_val(self, value):
 
         if isinstance(value, (float, np.float64)):
-            value = np.float32(value)
+            value = np.float16(value)
         elif isinstance(value, bool):
             value = np.bool(value)
         elif isinstance(value, (int, np.int64)):
@@ -180,7 +180,7 @@ class Const(Operation):
             elif value.dtype == np.float64:
                 msg = "Downcast const op {} data fp64 as fp32".format(self.name)
                 logger.debug(msg)
-                value = value.astype(np.float32)
+                value = value.astype(np.float16)
 
         elif isinstance(value, mil_list):
             # if val that was passed in is of type mil_list, which is just a wrapper on top of python list

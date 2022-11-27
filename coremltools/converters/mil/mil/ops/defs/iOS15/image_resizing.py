@@ -58,8 +58,8 @@ class upsample_nearest_neighbor(Operation):
     )
     
     type_domains = {
-        "T": (types.fp16, types.fp32),
-        "U": (types.fp32, types.int32),
+        "T": (types.fp16, types.fp16),
+        "U": (types.fp16, types.int32),
     }
 
     def default_inputs(self):
