@@ -2949,6 +2949,16 @@ def upsample_nearest2d(context, node):
         else:
             raise ValueError("Failed to infer scale factors from inputs.")
 
+    # CoreML only supports upsampling int32 or float32. either would work for us.
+    if scales_h.dtype == _np.float16:
+        assert scales_h == 2.0
+        scales_h = scales_h.astype(_np.int32)
+        assert scales_h == 2
+    if scales_w.dtype == _np.float16:
+        assert scales_w == 2.0
+        scales_w = scales_w.astype(_np.int32)
+        assert scales_w == 2
+
     upsample_nearest2d = mb.upsample_nearest_neighbor(
         x=_input,
         scale_factor_height=scales_h,
